@@ -8,3 +8,11 @@ export const hashData = async (data) => {
     console.error('Error while hashing data:', err);
   }
 };
+
+export const verifyHash = async (rawData, encriptedData) => {
+  try {
+    return await argon2.verify(encriptedData, rawData);
+  } catch (err) {
+    console.error('Error while hashing data:', err);
+  }
+};

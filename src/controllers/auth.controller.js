@@ -1,5 +1,6 @@
 import { getUserByUsername } from "../repositories/user.repository.js";
 import { generateToken } from "../helpers/jwt.js";
+import { verifyHash } from "../helpers/encription.js";
 
 
 export const loginController = async (req, res) => {
@@ -10,13 +11,18 @@ export const loginController = async (req, res) => {
       return res.status(401).json({ message: "No user found with given credentials" });
     }
 
-    const isPasswordValid = user.password === password;
+    const isPasswordValid = await verifyHash(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "No user found with given credentials" });
     }
 
     const token = generateToken({ id: user.id, username: user.username });
-    res.cookie("access_token", `Bearer ${token}`);
+    res.cookie("access_token", token, {
+      httpOnly: true,
+      secure: process.env.ENV === "production",
+      sameSite: "lax",
+    });
+    
     return res.json();
   } catch (error) {
     console.error('Error during login:', error);

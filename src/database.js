@@ -1,13 +1,6 @@
-import { Sequelize } from 'sequelize';
+import { createClient } from '@supabase/supabase-js';
 
+const SUPABASE_URL = process.env.DATABASE_HOST;
+const SUPABASE_KEY = process.env.DATABASE_PASSWORD;
 
-const USER = process.env.DATABASE_USER
-const PASSWORD = process.env.DATABASE_PASSWORD
-const HOST = process.env.DATABASE_HOST
-
-export const sequelize = new Sequelize('postgres', USER, PASSWORD, {
-  host: HOST,
-  dialect: 'postgres',
-  port: 5432,
-  logging: true
-});
+export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
